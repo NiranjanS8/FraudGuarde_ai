@@ -1,0 +1,17 @@
+{
+  "name": "fraud-guard-ai",
+  "version": "1.0.0",
+  "description": "Fraud Detection System using GNN",
+  "scripts": {
+    "start": "http-server static -p 3000 --cors",
+    "start:backend": "python backend/app.py"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2"
+  }
+}
