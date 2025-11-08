@@ -1733,6 +1733,7 @@ const AnalyticsPage = () => {
 
 
 // About Page
+// About Page
 const AboutPage = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -1744,39 +1745,38 @@ const AboutPage = () => {
                     <div className="prose dark:prose-invert max-w-none">
                         <p className="text-lg text-gray-800 dark:text-gray-300 mb-6">
                             FraudGuard AI is an advanced fraud detection system powered by cutting-edge machine learning technology. 
-                            Our system combines Generative Adversarial Networks (GAN) with Random Forest algorithms to provide 
-                            highly accurate fraud detection in real-time.
+                            Our system combines a <strong>Graph Attention Network (GAT)</strong> for relational analysis with a <strong>Random Forest</strong> algorithm to provide highly accurate fraud detection in real-time.
                         </p>
 
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">How It Works</h2>
 
-<div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
-    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-        1. Transaction-Level Analysis (GAN + Random Forest)
-    </h3>
-    <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
-        <li>
-            <strong>GAN (Generative Adversarial Network):</strong> Generates synthetic fraud patterns to enhance training data.
-        </li>
-        <li>
-            <strong>Random Forest:</strong> Classifies transactions based on 20+ features like amount, frequency, device, and location.
-        </li>
-    </ul>
-</div>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                1. Feature-Level Analysis (Random Forest)
+                            </h3>
+                            <ul className="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
+                                <li>
+                                    <strong>20+ Features Analyzed:</strong> Our Random Forest model classifies individual transactions by analyzing 20+ features like amount, frequency, device, and location.
+                                </li>
+                                <li>
+                                    <strong>Real-time Analysis:</strong> This feature-based check provides sub-second prediction times with 95.8% accuracy.
+                                </li>
+                            </ul>
+                        </div>
 
-<div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
-    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-        2. Relational Analysis (Graph Attention Network)
-    </h3>
-    <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
-        <li>
-            <strong>Graph-Based Detection:</strong> We model all users and transactions as a large, interconnected graph.
-        </li>
-        <li>
-            <strong>Graph Attention Network (GAT):</strong> A neural network that analyzes this graph to find suspicious <em>relationships</em>. It learns to "pay attention" to high-risk connections, spotting complex fraud rings and money mule networks.
-        </li>
-    </ul>
-</div>
+                        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                                2. Relational Analysis (Graph Attention Network)
+                            </h3>
+                            <ul className="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
+                                <li>
+                                    <strong>Graph-Based Detection:</strong> We model all users and transactions as a large, interconnected graph.
+                                </li>
+                                <li>
+                                    <strong>Graph Attention Network (GAT):</strong> A neural network that analyzes this graph to find suspicious <em>relationships</em>. It learns to "pay attention" to high-risk connections, spotting complex fraud rings and money mule networks.
+                                </li>
+                            </ul>
+                        </div>
 
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Technology Stack</h2>
                         <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -1784,10 +1784,10 @@ const AboutPage = () => {
                                 <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Backend</h4>
                                 <ul className="text-sm text-gray-800 dark:text-gray-300 space-y-1">
                                     <li>• Flask (Python)</li>
-                                    <li>• TensorFlow / PyTorch</li>
-                                    <li>• Scikit-learn</li>
+                                    <li>• DGL (Graph Construction) </li>
+                                    <li>• PyTorch (for GAT)</li>
+                                    <li>• SQLlite DB (Storing Transactions)</li>
                                     <li>• NumPy &amp; Pandas</li>
-                                Full-stack
                                 </ul>
                             </div>
                             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
@@ -1797,6 +1797,7 @@ const AboutPage = () => {
                                     <li>• Tailwind CSS</li>
                                     <li>• Chart.js</li>
                                     <li>• Axios</li>
+                                Course
                                 </ul>
                             </div>
                         </div>
@@ -1805,7 +1806,7 @@ const AboutPage = () => {
                         <ul className="space-y-3 mb-6">
                             <li className="flex items-start space-x-3">
                                 <span className="text-green-500 text-xl">✓</span>
-                                <span className="text-gray-800 dark:text-gray-300"><strong>Real-time Detection:</strong> Instant fraud analysis with detailed risk scoring</span>
+                                <span className="text-gray-800 dark:text-gray-300"><strong>Hybrid AI Detection:</strong> Combines feature-based (RF) and relational (GAT) analysis.</span>
                             </li>
                             <li className="flex items-start space-x-3">
                                 <span className="text-green-500 text-xl">✓</span>
@@ -1819,20 +1820,16 @@ const AboutPage = () => {
                                 <span className="text-green-500 text-xl">✓</span>
                                 <span className="text-gray-800 dark:text-gray-300"><strong>Export Capabilities:</strong> Download transaction data in CSV format</span>
                             </li>
-                            <li className="flex items-start space-x-3">
-                                <span className="text-green-500 text-xl">✓</span>
-                                <span className="text-gray-800 dark:text-gray-300"><strong>Dark Mode Support:</strong> Comfortable viewing in any lighting condition</span>
-                            </li>
                         </ul>
 
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Contact</h2>
                         <p className="text-gray-800 dark:text-gray-300 mb-4">
                             For more information about FraudGuard AI or to report issues, please contact:
-                        </p>
+                        </E>
                         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                             <p className="text-gray-800 dark:text-gray-300">📧 Email: support@fraudguard.ai</p>
                             <p className="text-gray-800 dark:text-gray-300">🌐 Website: www.fraudguard.ai</p>
-                            <p className="text-gray-800 dark:text-gray-300">📱 Phone: +1 (555) 123-4567</p>
+                            <p className="text-gray-800 dark:text-gray-300">📱 Phone: +91 9876501234</p>
                         </div>
                     </div>
                 </div>
