@@ -105,61 +105,26 @@ const LoginPageComponent = () => {
         return newErrors;
     };
 
-    const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Clear previous prediction
-    setPrediction(null);
-    setShowAlert(false);
-
-    // 🔒 Validation checks
-    if (!formData.from_account || !formData.to_account) {
-        setPrediction({
-            error: "Both 'From Account' and 'To Account' fields are required."
-        });
-        return;
-    }
-
-    if (!formData.transaction_amount || formData.transaction_amount <= 0) {
-        setPrediction({
-            error: "Invalid amount. Please enter a transaction amount greater than 0."
-        });
-        return;
-    }
-
-    // 🔄 Begin analysis
-    setLoading(true);
-    try {
-        const response = await axios.post(`${API_BASE_URL}/predict`, formData, {
-            timeout: 5000,
-            headers: { 'Content-Type': 'application/json' }
-        });
-
-        const result = response.data;
-        setPrediction(result);
-
-        if (result.probability > 0.8) {
-            setShowAlert(true);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newErrors = validate();
+        
+        if (Object.keys(newErrors).length === 0) {
+            const loginSuccess = login(email, password);
+            
+            if (loginSuccess) {
+                window.addToast('Login successful!', 'success');
+                setCurrentPage('dashboard');
+            } else {
+                setErrors({
+                    auth: 'Invalid email or password. Please use niranjans8@gmail.com and admin@123'
+                });
+                window.addToast('Login failed: Invalid credentials', 'error');
+            }
+        } else {
+            setErrors(newErrors);
         }
-
-        await addTransaction({
-            ...formData,
-            prediction: result.prediction,
-            probability: result.probability,
-            fraud_score: result.fraud_score || 0
-        });
-
-        window.addToast('Analysis completed successfully', 'success');
-    } catch (error) {
-        console.error('API Error:', error);
-        setPrediction({
-            error: "Network error. Unable to reach the prediction server."
-        });
-    } finally {
-        setLoading(false);
-    }
-};
-
+    };
 
     // Update the JSX to show authentication error
     return (
@@ -793,6 +758,7 @@ const DashboardPage = () => {
     const [prediction, setPrediction] = useState(null);
     const [loading, setLoading] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [formError, setFormError] = useState(null); // <-- MODIFICATION: Added state
 
     // Helper function to round based on step value
     const roundToStep = (value, step) => {
@@ -821,6 +787,8 @@ const DashboardPage = () => {
     }, []);
 
     const handleInputChange = (key, value) => {
+        setPrediction(null);
+        setFormError(null); // <-- MODIFICATION: Clear error on input change
         setFormData(prev => ({ ...prev, [key]: value }));
     };
 
@@ -880,6 +848,7 @@ const DashboardPage = () => {
       
         setFormData(randomSample);
         setPrediction(null);
+        setFormError(null); // <-- MODIFICATION: Clear error
         setShowAlert(false);
         window.addToast?.(
           `Generated randomized ${type === "fraud" ? "FRAUD" : "LEGITIMATE"} sample`,
@@ -896,6 +865,7 @@ const DashboardPage = () => {
         TRANSACTION_FEATURES.categorical.forEach(f => initialData[f.key] = f.options[0]);
         setFormData(initialData);
         setPrediction(null);
+        setFormError(null); // <-- MODIFICATION: Clear error
         setShowAlert(false);
         window.addToast('Form cleared', 'info');
     };
@@ -958,6 +928,7 @@ const DashboardPage = () => {
             };
             setFormData(fraudData);
             setPrediction(null);
+            setFormError(null); // <-- MODIFICATION: Clear error
             setShowAlert(false);
             window.addToast('Generated random FRAUD transaction 🚨', 'warning');
         } else {
@@ -988,37 +959,43 @@ const DashboardPage = () => {
             };
             setFormData(legitData);
             setPrediction(null);
+            setFormError(null); // <-- MODIFICATION: Clear error
             setShowAlert(false);
             window.addToast('Generated random LEGITIMATE transaction ✅', 'success');
         }
     };
     
     
-
+    // <-- MODIFICATION: Replaced handleSubmit function -->
     const handleSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    // ✅ Basic Validation
-    if (!formData.from_account || !formData.to_account) {
-        window.addToast?.("Both 'From Account' and 'To Account' are required.", "error");
-        return;
-    }
+        // Clear previous results/errors
+        setLoading(true);
+        setPrediction(null);
+        setFormError(null);
+        setShowAlert(false);
 
-    if (!formData.transaction_amount || formData.transaction_amount <= 0) {
-        window.addToast?.("Transaction Amount must be greater than zero.", "error");
-        return;
-    }
+        // ✅ Enhanced Validation
+        if (!formData.from_account || !formData.to_account) {
+            setFormError("Both 'From Account' and 'To Account' are required.");
+            window.addToast?.("Form is incomplete.", "error");
+            setLoading(false); // Stop loading
+            return;
+        }
 
-    setLoading(true);
-    setPrediction(null);
-    setShowAlert(false);
+        if (!formData.transaction_amount || formData.transaction_amount <= 0) {
+            setFormError("Invalid amount. Please enter a transaction amount greater than 0.");
+            window.addToast?.("Invalid transaction amount.", "error");
+            setLoading(false); // Stop loading
+            return;
+        }
 
-    try {
-        const response = await axios.post(`${API_BASE_URL}/predict`, formData, {
-            timeout: 5000,
-            headers: { 'Content-Type': 'application/json' }
-        });
-
+        try {
+            const response = await axios.post(`${API_BASE_URL}/predict`, formData, {
+                timeout: 5000,
+                headers: { 'Content-Type': 'application/json' }
+            });
 
             const result = response.data;
             setPrediction(result);
@@ -1039,16 +1016,19 @@ const DashboardPage = () => {
         } catch (error) {
             console.error('API Error:', error);
             window.addToast(
-                error.response?.data?.error || 
-                error.message || 
+                error.response?.data?.error ||
+                error.message ||
                 'Server connection failed',
                 'error'
             );
-            throw error;
+            // Optionally, set a server error message
+            // setFormError("Failed to connect to analysis server.");
         } finally {
             setLoading(false);
         }
     };
+    // <-- END OF MODIFICATION -->
+
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -1313,10 +1293,18 @@ const DashboardPage = () => {
                                 </div>
                             )}
 
-                            {!loading && !prediction && (
+                            {/* <-- MODIFICATION: Replaced conditional rendering logic --> */}
+                            {!loading && !prediction && !formError && (
                                 <div className="flex flex-col items-center justify-center py-12 text-center">
                                     <span className="text-6xl mb-4 block">🔍</span>
                                     <p className="text-gray-700 dark:text-gray-400">Fill the form and click "Analyze Transaction" to get results</p>
+                                </div>
+                            )}
+
+                            {!loading && formError && (
+                                <div className="flex flex-col items-center justify-center py-12 text-center fade-in">
+                                    <span className="text-6xl mb-4 block">🚫</span>
+                                    <p className="text-red-600 dark:text-red-400 font-semibold">{formError}</p>
                                 </div>
                             )}
 
@@ -1390,6 +1378,7 @@ const DashboardPage = () => {
                                     </div>
                                 </div>
                             )}
+                            {/* <-- END OF MODIFICATION --> */}
                         </div>
                     </div>
                 </div>
@@ -1530,7 +1519,7 @@ const TransactionsPage = () => {
                                                 </td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{(transaction.probability * 100).toFixed(1)}%</td>
                                                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">{transaction.fraud_score?.toFixed(1) || 'N/A'}</td>
-                                                <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(transaction.timestamp).toLocaleString()}</td>
+                 <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{new Date(transaction.timestamp).toLocaleString()}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -1779,6 +1768,7 @@ const AboutPage = () => {
                                     <li>• TensorFlow / PyTorch</li>
                                     <li>• Scikit-learn</li>
                                     <li>• NumPy &amp; Pandas</li>
+                                Full-stack
                                 </ul>
                             </div>
                             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
