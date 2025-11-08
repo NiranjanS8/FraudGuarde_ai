@@ -1749,15 +1749,34 @@ const AboutPage = () => {
                         </p>
 
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">How It Works</h2>
-                        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
-                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">GAN + Random Forest Hybrid Model</h3>
-                            <ul className="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
-                                <li><strong>GAN (Generative Adversarial Network):</strong> Generates synthetic fraud patterns to enhance training data and improve detection of novel fraud techniques.</li>
-                                <li><strong>Random Forest:</strong> Ensemble learning method that creates multiple decision trees to classify transactions with high accuracy.</li>
-                                <li><strong>20+ Features:</strong> Analyzes transaction amount, frequency, behavioral biometrics, device fingerprinting, location data, and more.</li>
-                                <li><strong>Real-time Analysis:</strong> Sub-second prediction times with 95.8% accuracy rate.</li>
-                            </ul>
-                        </div>
+
+<div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+        1. Transaction-Level Analysis (GAN + Random Forest)
+    </h3>
+    <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
+        <li>
+            <strong>GAN (Generative Adversarial Network):</strong> Generates synthetic fraud patterns to enhance training data.
+        </li>
+        <li>
+            <strong>Random Forest:</strong> Classifies transactions based on 20+ features like amount, frequency, device, and location.
+        </li>
+    </ul>
+</div>
+
+<div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg mb-6">
+    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+        2. Relational Analysis (Graph Attention Network)
+    </h3>
+    <ul class="list-disc list-inside space-y-2 text-gray-800 dark:text-gray-300">
+        <li>
+            <strong>Graph-Based Detection:</strong> We model all users and transactions as a large, interconnected graph.
+        </li>
+        <li>
+            <strong>Graph Attention Network (GAT):</strong> A neural network that analyzes this graph to find suspicious <em>relationships</em>. It learns to "pay attention" to high-risk connections, spotting complex fraud rings and money mule networks.
+        </li>
+    </ul>
+</div>
 
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Technology Stack</h2>
                         <div className="grid md:grid-cols-2 gap-4 mb-6">
