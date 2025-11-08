@@ -961,16 +961,29 @@ const DashboardPage = () => {
     
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setPrediction(null);
-        setShowAlert(false);
+    e.preventDefault();
 
-        try {
-            const response = await axios.post(`${API_BASE_URL}/predict`, formData, {
-                timeout: 5000,
-                headers: { 'Content-Type': 'application/json' }
-            });
+    // ✅ Basic Validation
+    if (!formData.from_account || !formData.to_account) {
+        window.addToast?.("Both 'From Account' and 'To Account' are required.", "error");
+        return;
+    }
+
+    if (!formData.transaction_amount || formData.transaction_amount <= 0) {
+        window.addToast?.("Transaction Amount must be greater than zero.", "error");
+        return;
+    }
+
+    setLoading(true);
+    setPrediction(null);
+    setShowAlert(false);
+
+    try {
+        const response = await axios.post(`${API_BASE_URL}/predict`, formData, {
+            timeout: 5000,
+            headers: { 'Content-Type': 'application/json' }
+        });
+
 
             const result = response.data;
             setPrediction(result);
