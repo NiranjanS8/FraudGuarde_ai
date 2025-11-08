@@ -2,7 +2,7 @@
 const { useState, useEffect, createContext, useContext, useCallback, useMemo, useRef } = React;
 
 // ==================== CONSTANTS ====================
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = "https://fraudguarde-ai.onrender.com";
 const MAX_TRANSACTIONS = 10000;
 
 // Transaction features configuration
