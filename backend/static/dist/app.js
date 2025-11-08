@@ -105,26 +105,61 @@ const LoginPageComponent = () => {
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newErrors = validate();
-        
-        if (Object.keys(newErrors).length === 0) {
-            const loginSuccess = login(email, password);
-            
-            if (loginSuccess) {
-                window.addToast('Login successful!', 'success');
-                setCurrentPage('dashboard');
-            } else {
-                setErrors({
-                    auth: 'Invalid email or password. Please use niranjans8@gmail.com and admin@123'
-                });
-                window.addToast('Login failed: Invalid credentials', 'error');
-            }
-        } else {
-            setErrors(newErrors);
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Clear previous prediction
+    setPrediction(null);
+    setShowAlert(false);
+
+    // 🔒 Validation checks
+    if (!formData.from_account || !formData.to_account) {
+        setPrediction({
+            error: "Both 'From Account' and 'To Account' fields are required."
+        });
+        return;
+    }
+
+    if (!formData.transaction_amount || formData.transaction_amount <= 0) {
+        setPrediction({
+            error: "Invalid amount. Please enter a transaction amount greater than 0."
+        });
+        return;
+    }
+
+    // 🔄 Begin analysis
+    setLoading(true);
+    try {
+        const response = await axios.post(`${API_BASE_URL}/predict`, formData, {
+            timeout: 5000,
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = response.data;
+        setPrediction(result);
+
+        if (result.probability > 0.8) {
+            setShowAlert(true);
         }
-    };
+
+        await addTransaction({
+            ...formData,
+            prediction: result.prediction,
+            probability: result.probability,
+            fraud_score: result.fraud_score || 0
+        });
+
+        window.addToast('Analysis completed successfully', 'success');
+    } catch (error) {
+        console.error('API Error:', error);
+        setPrediction({
+            error: "Network error. Unable to reach the prediction server."
+        });
+    } finally {
+        setLoading(false);
+    }
+};
+
 
     // Update the JSX to show authentication error
     return (
