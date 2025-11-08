@@ -1733,7 +1733,6 @@ const AnalyticsPage = () => {
 
 
 // About Page
-// About Page
 const AboutPage = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -1797,7 +1796,6 @@ const AboutPage = () => {
                                     <li>• Tailwind CSS</li>
                                     <li>• Chart.js</li>
                                     <li>• Axios</li>
-                                Course
                                 </ul>
                             </div>
                         </div>
@@ -1825,7 +1823,7 @@ const AboutPage = () => {
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-8 mb-4">Contact</h2>
                         <p className="text-gray-800 dark:text-gray-300 mb-4">
                             For more information about FraudGuard AI or to report issues, please contact:
-                        </E>
+                        </p>
                         <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                             <p className="text-gray-800 dark:text-gray-300">📧 Email: support@fraudguard.ai</p>
                             <p className="text-gray-800 dark:text-gray-300">🌐 Website: www.fraudguard.ai</p>
